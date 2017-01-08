@@ -1,0 +1,32 @@
+
+.townstable{
+
+}
+
+.tablerow{
+  width: 100%;
+  padding: 1px;
+}
+
+ul {
+  list-style: none;
+  padding: 1px;
+}
+
+.rowelement {
+  width: 100%;
+  padding: 2px;
+  margin: 0.5rem 0;
+  border: 1px solid blue;
+  box-sizing: border-box;
+  background-color: aliceblue;
+  border-radius: 8px;
+}
+.rowelement:hover {
+  background-color: aqua;
+}
+
+.townname{
+  font-size: 1.2rem;
+  font-weight: 700;
+}
