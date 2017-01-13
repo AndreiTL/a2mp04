@@ -1,14 +1,14 @@
-import {Component, NgZone} from '@angular/core';
+import {Component, Input, NgZone, ChangeDetectionStrategy} from '@angular/core';
 import {template} from './header.tpl';
 import {WeatherModelService} from '../common/weather_model.service';
 
 @Component({
   selector: 'my-header',
   template: template,
-  providers: [ ]
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class HeaderComponent {
-
+  @Input() location: ILocation.ICoordinates;
   lastUpddateTime: number;
 
   constructor(

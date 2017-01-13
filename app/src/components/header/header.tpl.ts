@@ -1,7 +1,9 @@
 export const template = `
 <div class="header">
     <div class="appcontainer">
-        <span>Last update: </span><span>{{lastUpddateTime| date:'medium'}}</span>
+        <div><span>Last update: </span><span>{{lastUpddateTime| date:'medium'}}</span></div>
+        <div><span>Longitude: </span><span>{{location?.longitude}}</span></div>
+        <div><span>Latitude: </span><span>{{location?.latitude}}</span></div>
     </div>    
 </div>
 `;

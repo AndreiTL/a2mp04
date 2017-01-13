@@ -1,7 +1,7 @@
 export const template = `
 <div class="rootcontainer">
   <div class="maincontent">
-    <my-header></my-header>
+    <my-header [location]="coordinates"></my-header>
     <div class="appcontainer">
       <div *ngIf="!enableChild">   
           <span>Waiting for location resolve.</span>
