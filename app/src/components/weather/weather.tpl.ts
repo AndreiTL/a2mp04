@@ -1,5 +1,8 @@
 export const template = `
 <div>
+    <div>Favorite Towns:</div>
+    
+
     <div>Weather in towns: </div>
       
     <div *ngIf="trigLoad">
