@@ -99,6 +99,38 @@ export class WeatherModelService {
     });
   }
 
+  getFavoriteTownsWeather(): Weather.ITownWeather[] {
+    let townsWeather: Weather.ITownWeather[] =
+      <Weather.ITownWeather[]> JSON.parse(this.storageService.getData('favoriteTownsWeather'));
+    return townsWeather? townsWeather : [];
+  }
+
+  addToFavorite(townWeather: Weather.ITownWeather): void {
+    let townsWeather: Weather.ITownWeather[] =
+      <Weather.ITownWeather[]> JSON.parse(this.storageService.getData('favoriteTownsWeather'));
+    if (!townsWeather) {
+      townsWeather = [];
+    }
+    townsWeather.push(townWeather);
+    this.storageService.setData('favoriteTownsWeather', JSON.stringify(townsWeather));
+  }
+
+  removeFromFavorite(townWeather: Weather.ITownWeather):void {
+    let townsWeather: Weather.ITownWeather[] =
+      <Weather.ITownWeather[]> JSON.parse(this.storageService.getData('favoriteTownsWeather'));
+    let indexToDelete: number;
+    if (townsWeather) {
+      indexToDelete = townsWeather.findIndex((element) => {
+        return element.id === townWeather.id;
+      });
+      // console.log('Delete element ' + indexToDelete + ' id = ' + townsWeather[indexToDelete].id);
+      townsWeather.splice(indexToDelete, 1);
+    } else {
+      townsWeather = [];
+    }
+    this.storageService.setData('favoriteTownsWeather', JSON.stringify(townsWeather));
+  }
+
   getLastUpdateTime(): number {
     return parseInt(this.storageService.getData('lastUpdateTime'), 10);
   }

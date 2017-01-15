@@ -15,6 +15,7 @@ export class WeatherComponent {
 
   trigLoad: boolean = false;
   townsTable: Weather.ITownWeather[] ;
+  favoriteTownsTable: Weather.ITownWeather[];
 
   constructor(
       private zone: NgZone,
@@ -22,6 +23,7 @@ export class WeatherComponent {
     ) {
     console.log('WeatherComponent init.');
     this.townsTable = [];
+    this.favoriteTownsTable = this.weatherModelService.getFavoriteTownsWeather();
   }
 
   ngAfterContentInit() {
@@ -42,6 +44,19 @@ export class WeatherComponent {
     ).then( () => {
       this.updateTableList();
     });
+    // this.favoriteTownsTable = this.weatherModelService.getFavoriteTownsWeather();
+  }
+
+  addTownFavorite(town: Weather.ITownWeather) {
+    console.log(" Add to favorite " + town.id);
+    this.weatherModelService.addToFavorite(town);
+    this.favoriteTownsTable = this.weatherModelService.getFavoriteTownsWeather();
+  }
+
+  removeTownFavorite(town: Weather.ITownWeather) {
+    console.log(" Remove from favorite " + town.id);
+    this.weatherModelService.removeFromFavorite(town);
+    this.favoriteTownsTable = this.weatherModelService.getFavoriteTownsWeather();
   }
 
   private updateTableList() {
