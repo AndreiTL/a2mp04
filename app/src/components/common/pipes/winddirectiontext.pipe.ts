@@ -16,7 +16,7 @@ export class WindDirectionTextPipe implements PipeTransform {
       '360': 'North',
       'undefined': 'undefined'
     };
-    if (!angle) {
+    if (!angle && angle !== 0) {
       direction = directions['undefined'];
     } else if (-22.5 < angle && angle <= 22.5) {
       direction = directions['0'];
