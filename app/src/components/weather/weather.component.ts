@@ -14,6 +14,7 @@ export class WeatherComponent {
   weatherObject: Weather.IWeatherObject;
 
   trigLoad: boolean = false;
+  trigLoadFavorite: boolean = false;
   townsTable: Weather.ITownWeather[] ;
   favoriteTownsTable: Weather.ITownWeather[];
 
@@ -57,6 +58,21 @@ export class WeatherComponent {
     console.log(" Remove from favorite " + town.id);
     this.weatherModelService.removeFromFavorite(town);
     this.favoriteTownsTable = this.weatherModelService.getFavoriteTownsWeather();
+  }
+
+  reloadFavoritesTownsWeather(): void {
+    this.trigLoadFavorite = true;
+    this.weatherModelService.reloadFavoriteTownsWeather().then(
+      (weather: Weather.IWeatherObject) => {
+        this.favoriteTownsTable = weather.list;
+        this.trigLoadFavorite = false;
+      },
+      () => {
+        this.trigLoadFavorite = false;
+        console.log(" Cann't reload weather for favorite towns. ");
+        alert(" Cann't reload weather for favorite towns. ");
+      }
+    );
   }
 
   private updateTableList() {

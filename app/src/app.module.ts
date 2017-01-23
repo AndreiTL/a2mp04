@@ -9,6 +9,7 @@ import {FooterComponent} from './components/footer/footer.component';
 
 import { GooglemapComponent } from './components/googlemap/googlemap.component';
 import { WeatherComponent } from './components/weather/weather.component';
+import { LoadMaskComponent } from './components/loadmask/loadmask.component';
 
 import {GoogleMapLoaderService} from './components/common/google_maps_loader.service';
 import {LocationService} from './components/common/location.service';
@@ -31,6 +32,7 @@ import {WindDirectionTextPipe} from './components/common/pipes/winddirectiontext
     FooterComponent,
     GooglemapComponent,
     WeatherComponent,
+    LoadMaskComponent,
     TemperatureCelciumPipe,
     WindDirectionTextPipe
   ],

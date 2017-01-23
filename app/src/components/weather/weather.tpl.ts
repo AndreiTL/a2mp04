@@ -1,7 +1,13 @@
 export const template = `
 <div>
     <div>Favorite Towns:</div>
-    <div *ngIf="favoriteTownsTable.length > 0">
+    <div *ngIf="favoriteTownsTable.length > 0" class="pos-relative">
+        <load-mask [activate]="trigLoadFavorite"></load-mask>
+        <div class="favorite-pane">
+            <button (click)="reloadFavoritesTownsWeather()" class="favorite-button-right">
+                <span>Reload</span>
+            </button>
+        </div>
         <ul>
           <li *ngFor="let town of favoriteTownsTable" class="rowelement">
               <table class="tablerow">

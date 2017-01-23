@@ -1,9 +1,25 @@
 
-.townstable{
+.townstable {
 
 }
+.pos-relative {
+  position: relative;
+}
+.favorite-pane {
+  height: 30px;
+  position: relative;
+  width: 100%;
+}
+.favorite-button-right {
+  position: absolute;
+  right: 0;
+  padding: 2px;
+  border: 1px solid red;
+  border-radius: 3px;
+  background-color: lavender;
+}
 
-.tablerow{
+.tablerow {
   width: 100%;
   padding: 1px;
 }

@@ -40,7 +40,7 @@ export class WeatherModelService {
       if (!lastUpdateTimeString) {
         // case: first load
         console.log('Nothing in storage. Load from internet.');
-        this.initLoad(resolve, reject);
+        this.initLoadInCircle(resolve, reject);
       } else {
         // in milliseconds
         this.lastUpdateTime = parseInt(lastUpdateTimeString, 10);
@@ -61,7 +61,7 @@ export class WeatherModelService {
         } else {
           // case: in storage are expired data then load from internet
           console.log('Expired or invalid in storage. Load from internet.');
-          this.initLoad(resolve, reject);
+          this.initLoadInCircle(resolve, reject);
         }
       }
     });
@@ -73,6 +73,25 @@ export class WeatherModelService {
     return townsWeather? townsWeather : [];
   }
 
+  reloadFavoriteTownsWeather(): Promise<Weather.IWeatherObject> {
+    let favoriteTownIds: number[] = JSON.parse(this.storageService.getData('favoriteTownsIds'));
+    return new Promise((resolve, reject) => {
+      if (favoriteTownIds) {
+        this.loadWeatherByIds(favoriteTownIds).then(
+          (weather: Weather.IWeatherObject) => {
+            this.storageService.setData('favoriteTownsWeather', JSON.stringify(weather.list));
+            resolve(weather);
+          },
+          () => {
+            reject();
+          }
+        )
+      } else {
+        reject();
+      }
+    })
+  }
+
   addToFavorite(townWeather: Weather.ITownWeather): void {
     let townsWeather: Weather.ITownWeather[] =
       <Weather.ITownWeather[]> JSON.parse(this.storageService.getData('favoriteTownsWeather'));
@@ -81,6 +100,15 @@ export class WeatherModelService {
     }
     townsWeather.push(townWeather);
     this.storageService.setData('favoriteTownsWeather', JSON.stringify(townsWeather));
+
+    // save ids
+    let townsIds: number[] =
+      JSON.parse(this.storageService.getData('favoriteTownsIds'));
+    if (!townsIds) {
+      townsIds = [];
+    }
+    townsIds.push(townWeather.id);
+    this.storageService.setData('favoriteTownsIds', JSON.stringify(townsIds));
   }
 
   removeFromFavorite(townWeather: Weather.ITownWeather):void {
@@ -91,12 +119,24 @@ export class WeatherModelService {
       indexToDelete = townsWeather.findIndex((element) => {
         return element.id === townWeather.id;
       });
-      // console.log('Delete element ' + indexToDelete + ' id = ' + townsWeather[indexToDelete].id);
       townsWeather.splice(indexToDelete, 1);
     } else {
       townsWeather = [];
     }
     this.storageService.setData('favoriteTownsWeather', JSON.stringify(townsWeather));
+
+    // remove ids
+    let townsIds: number[] = JSON.parse(this.storageService.getData('favoriteTownsIds'));
+    let indexIdToDelete: number;
+    if (townsIds) {
+      indexIdToDelete = townsIds.findIndex((element) => {
+        return element === townWeather.id;
+      });
+      townsIds.splice(indexIdToDelete, 1);
+    } else {
+      townsIds = [];
+    }
+    this.storageService.setData('favoriteTownsIds', JSON.stringify(townsIds));
   }
 
   getLastUpdateTime(): number {
@@ -107,8 +147,8 @@ export class WeatherModelService {
     return this.weatherObject.list;
   }
 
-  private initLoad(resolve: Function, reject: Function) {
-    this.loadWeather().then((weatherObj: Weather.IWeatherObject) => {
+  private initLoadInCircle(resolve: Function, reject: Function) {
+    this.loadWeatherInCircle().then((weatherObj: Weather.IWeatherObject) => {
         this.lastUpdateTime = Date.now();
         this.weatherObject = weatherObj;
         this.storageService.setData('lastUpdateTime', JSON.stringify(this.lastUpdateTime));
@@ -127,7 +167,36 @@ export class WeatherModelService {
       });
   }
 
-  private loadWeather(): Promise<Weather.IWeatherObject> {
+  private loadWeatherByIds(ids: number[]): Promise<Weather.IWeatherObject> {
+    return new Promise((resolve, reject): void => {
+      let weather: Weather.IWeatherObject;
+      let idsStringBody: string = '';
+      ids.map((value: number, index: number) => {
+        if (index > 0){
+          idsStringBody = idsStringBody.concat(',', value.toString());
+        } else {
+          idsStringBody = value.toString();
+        }
+      });
+
+      let urlTemplate = `http://api.openweathermap.org/data/2.5/group?id=` +
+        `${idsStringBody}&appid=${this.API}`;
+
+      this.restService.sendRequest(this.typeRequest, urlTemplate, this.async, '').then(
+        (responseText: string) => {
+          weather = <Weather.IWeatherObject> JSON.parse(responseText);
+          resolve(weather);
+        },
+        () => {
+          console.log('Cann\'t load data from weather portal!');
+          alert('Cann\'t load data from weather portal!');
+          reject();
+        }
+      );
+    });
+  }
+
+  private loadWeatherInCircle(): Promise<Weather.IWeatherObject> {
     return new Promise((resolve, reject): void => {
       let weather: Weather.IWeatherObject;
 
