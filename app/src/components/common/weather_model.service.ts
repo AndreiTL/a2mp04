@@ -92,6 +92,17 @@ export class WeatherModelService {
     })
   }
 
+  addToFavoriteById(id: number): Promise<Weather.IWeatherObject> {
+    let townsIds: number[] =
+      JSON.parse(this.storageService.getData('favoriteTownsIds'));
+    if (!townsIds) {
+      townsIds = [];
+    }
+    townsIds.push(id);
+    this.storageService.setData('favoriteTownsIds', JSON.stringify(townsIds));
+    return this.reloadFavoriteTownsWeather();
+  }
+
   addToFavorite(townWeather: Weather.ITownWeather): void {
     let townsWeather: Weather.ITownWeather[] =
       <Weather.ITownWeather[]> JSON.parse(this.storageService.getData('favoriteTownsWeather'));
@@ -137,6 +148,11 @@ export class WeatherModelService {
       townsIds = [];
     }
     this.storageService.setData('favoriteTownsIds', JSON.stringify(townsIds));
+  }
+
+  removeAllFavorites() {
+    this.storageService.setData('favoriteTownsWeather', JSON.stringify([]));
+    this.storageService.setData('favoriteTownsIds', JSON.stringify([]));
   }
 
   getLastUpdateTime(): number {
