@@ -1,4 +1,4 @@
-import {Component, Input, NgZone} from '@angular/core';
+import {Component, Input, ChangeDetectorRef} from '@angular/core';
 import {template} from './weather.tpl';
 
 import {WeatherModelService} from '../common/weather_model.service';
@@ -18,7 +18,7 @@ export class WeatherComponent {
   favoriteTownsTable: Weather.ITownWeather[];
 
   constructor(
-      private zone: NgZone,
+      private cd: ChangeDetectorRef,
       private weatherModelService: WeatherModelService
     ) {
     console.log('WeatherComponent init.');
@@ -61,6 +61,6 @@ export class WeatherComponent {
 
   private updateTableList() {
     this.trigLoad = true;
-    this.zone.run(() => {});
+    this.cd.detectChanges();
   }
 }

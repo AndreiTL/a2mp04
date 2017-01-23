@@ -1,4 +1,4 @@
-import {Component, NgZone} from '@angular/core';
+import {Component, ChangeDetectorRef} from '@angular/core';
 
 import { template } from './app.tpl';
 import {LocationService} from './components/common/location.service';
@@ -15,21 +15,22 @@ export class AppComponent  {
   coordinates: ILocation.ICoordinates;
 
   constructor(private locationService: LocationService,
-              private zone: NgZone) {
+              private cd: ChangeDetectorRef
+  ) {
     this.locationService.getCurrentLocation().then(
       (coordinate: ILocation.ICoordinates) => {
         this.coordinates = coordinate;
       },
       () => {
-        console.log('Cann\'t get coordinates. Load default (32,32).');
-        alert('Cann\'t get coordinates. Load default (32,32).');
+        console.log('Cann\'t get coordinates. Load default (31,32).');
+        alert('Cann\'t get coordinates. Load default (31,32).');
         this.coordinates = {
           longitude: 32,
-          latitude: 32
+          latitude: 31
         };
       }
     ).then( () => {
-      this.zone.run(() => {});
+      this.cd.detectChanges();
       this.enableChild = true;
     });
   }
