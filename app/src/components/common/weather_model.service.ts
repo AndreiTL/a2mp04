@@ -20,6 +20,8 @@ export class WeatherModelService {
   longitude: number = 0;
   count: number = 1;
 
+  lastUpdateTime: number;
+
   constructor(private storageService: StorageService,
           private restService: RestService
   ) {
@@ -34,35 +36,17 @@ export class WeatherModelService {
 
   getWeatherInCircle(): Promise<Weather.IWeatherObject> {
     return new Promise((resolve, reject): void => {
-      // let weather: Weather.IWeather;
       let lastUpdateTimeString: string = this.storageService.getData('lastUpdateTime');
-      let lastUpdateTime: number;
       if (!lastUpdateTimeString) {
         // case: first load
         console.log('Nothing in storage. Load from internet.');
-        this.loadWeather().then((weatherObj: Weather.IWeatherObject) => {
-          lastUpdateTime = Date.now();
-          this.weatherObject = weatherObj;
-          this.storageService.setData('lastUpdateTime', JSON.stringify(lastUpdateTime));
-          this.storageService.setData('weather', JSON.stringify(this.weatherObject));
-          this.storageService.setData('params', JSON.stringify({
-            longitude: this.longitude,
-            latitude: this.latitude,
-            count: this.count})
-          );
-          // call for model update
-          this.callFunctionsInArray();
-          resolve(this.weatherObject);
-        },
-        () => {
-          reject();
-        });
+        this.initLoad(resolve, reject);
       } else {
         // in milliseconds
-        lastUpdateTime = parseInt(lastUpdateTimeString, 10);
+        this.lastUpdateTime = parseInt(lastUpdateTimeString, 10);
         let paramsString: string = this.storageService.getData('params');
         let params: Weather.IWeatherParams = <Weather.IWeatherParams> JSON.parse(paramsString);
-        if ((lastUpdateTime > (Date.now() - this.maxTimeValide)) &&
+        if ((this.lastUpdateTime > (Date.now() - this.maxTimeValide)) &&
             params.latitude === this.latitude &&
             params.longitude === this.longitude &&
             params.count === this.count
@@ -77,23 +61,7 @@ export class WeatherModelService {
         } else {
           // case: in storage are expired data then load from internet
           console.log('Expired or invalid in storage. Load from internet.');
-          this.loadWeather().then((weatherObj: Weather.IWeatherObject) => {
-              lastUpdateTime = Date.now();
-              this.weatherObject = weatherObj;
-              this.storageService.setData('lastUpdateTime', JSON.stringify(lastUpdateTime));
-              this.storageService.setData('weather', JSON.stringify(this.weatherObject));
-              this.storageService.setData('params', JSON.stringify({
-                longitude: this.longitude,
-                latitude: this.latitude,
-                count: this.count})
-              );
-              // call for model update
-              this.callFunctionsInArray();
-              resolve(this.weatherObject);
-            },
-            () => {
-              reject();
-            });
+          this.initLoad(resolve, reject);
         }
       }
     });
@@ -137,6 +105,26 @@ export class WeatherModelService {
 
   getTownsWeather(): Weather.ITownWeather[] {
     return this.weatherObject.list;
+  }
+
+  private initLoad(resolve: Function, reject: Function) {
+    this.loadWeather().then((weatherObj: Weather.IWeatherObject) => {
+        this.lastUpdateTime = Date.now();
+        this.weatherObject = weatherObj;
+        this.storageService.setData('lastUpdateTime', JSON.stringify(this.lastUpdateTime));
+        this.storageService.setData('weather', JSON.stringify(this.weatherObject));
+        this.storageService.setData('params', JSON.stringify({
+          longitude: this.longitude,
+          latitude: this.latitude,
+          count: this.count})
+        );
+        // call for model update
+        this.callFunctionsInArray();
+        resolve(this.weatherObject);
+      },
+      () => {
+        reject();
+      });
   }
 
   private loadWeather(): Promise<Weather.IWeatherObject> {
