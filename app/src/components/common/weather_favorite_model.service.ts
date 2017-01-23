@@ -6,21 +6,6 @@ import {WeatherModelService} from './weather_model.service';
 export class WeatherFavoriteModelService {
 
   callFunctionsArray: Function[];
-  weatherObject: Weather.IWeatherObject;
-
-  // 10 minutes
-  // maxTimeValide: number = 10 * 60 * 1000;
-
-  // API: string = `94c7919f6854ca11558382472a998f8f`;
-
-  // typeRequest: string = 'GET';
-  // async: boolean = true;
-
-  // latitude: number = 0;
-  // longitude: number = 0;
-  // count: number = 1;
-
-  lastUpdateTime: number;
 
   constructor(
       private weatherModelService: WeatherModelService,
@@ -118,13 +103,5 @@ export class WeatherFavoriteModelService {
     this.storageService.setData('favoriteTownsWeather', JSON.stringify([]));
     this.storageService.setData('favoriteTownsIds', JSON.stringify([]));
   }
-
-  // getLastUpdateTime(): number {
-  //   return parseInt(this.storageService.getData('lastUpdateTime'), 10);
-  // }
-  //
-  // getTownsWeather(): Weather.ITownWeather[] {
-  //   return this.weatherObject.list;
-  // }
 
 }
