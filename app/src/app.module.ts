@@ -17,6 +17,7 @@ import {StorageService} from './components/common/storage.service';
 import {MarkersService} from './components/common/markers.service';
 import {RestService} from './components/common/rest.service';
 import {WeatherModelService} from './components/common/weather_model.service';
+import {WeatherFavoriteModelService} from './components/common/weather_favorite_model.service';
 
 import {TemperatureCelciumPipe} from './components/common/pipes/temperature.pipe';
 import {WindDirectionTextPipe} from './components/common/pipes/winddirectiontext.pipe';
@@ -42,6 +43,7 @@ import {WindDirectionTextPipe} from './components/common/pipes/winddirectiontext
     StorageService,
     LocationService,
     WeatherModelService,
+    WeatherFavoriteModelService,
     GoogleMapLoaderService],
   bootstrap:    [ AppComponent ]
 })

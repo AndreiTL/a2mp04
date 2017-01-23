@@ -67,93 +67,93 @@ export class WeatherModelService {
     });
   }
 
-  getFavoriteTownsWeather(): Weather.ITownWeather[] {
-    let townsWeather: Weather.ITownWeather[] =
-      <Weather.ITownWeather[]> JSON.parse(this.storageService.getData('favoriteTownsWeather'));
-    return townsWeather? townsWeather : [];
-  }
+  // getFavoriteTownsWeather(): Weather.ITownWeather[] {
+  //   let townsWeather: Weather.ITownWeather[] =
+  //     <Weather.ITownWeather[]> JSON.parse(this.storageService.getData('favoriteTownsWeather'));
+  //   return townsWeather? townsWeather : [];
+  // }
+  //
+  // reloadFavoriteTownsWeather(): Promise<Weather.IWeatherObject> {
+  //   let favoriteTownIds: number[] = JSON.parse(this.storageService.getData('favoriteTownsIds'));
+  //   return new Promise((resolve, reject) => {
+  //     if (favoriteTownIds) {
+  //       this.loadWeatherByIds(favoriteTownIds).then(
+  //         (weather: Weather.IWeatherObject) => {
+  //           this.storageService.setData('favoriteTownsWeather', JSON.stringify(weather.list));
+  //           resolve(weather);
+  //         },
+  //         () => {
+  //           reject();
+  //         }
+  //       )
+  //     } else {
+  //       reject();
+  //     }
+  //   })
+  // }
 
-  reloadFavoriteTownsWeather(): Promise<Weather.IWeatherObject> {
-    let favoriteTownIds: number[] = JSON.parse(this.storageService.getData('favoriteTownsIds'));
-    return new Promise((resolve, reject) => {
-      if (favoriteTownIds) {
-        this.loadWeatherByIds(favoriteTownIds).then(
-          (weather: Weather.IWeatherObject) => {
-            this.storageService.setData('favoriteTownsWeather', JSON.stringify(weather.list));
-            resolve(weather);
-          },
-          () => {
-            reject();
-          }
-        )
-      } else {
-        reject();
-      }
-    })
-  }
+  // addToFavoriteById(id: number): Promise<Weather.IWeatherObject> {
+  //   let townsIds: number[] =
+  //     JSON.parse(this.storageService.getData('favoriteTownsIds'));
+  //   if (!townsIds) {
+  //     townsIds = [];
+  //   }
+  //   townsIds.push(id);
+  //   this.storageService.setData('favoriteTownsIds', JSON.stringify(townsIds));
+  //   return this.reloadFavoriteTownsWeather();
+  // }
+  //
+  // addToFavorite(townWeather: Weather.ITownWeather): void {
+  //   let townsWeather: Weather.ITownWeather[] =
+  //     <Weather.ITownWeather[]> JSON.parse(this.storageService.getData('favoriteTownsWeather'));
+  //   if (!townsWeather) {
+  //     townsWeather = [];
+  //   }
+  //   townsWeather.push(townWeather);
+  //   this.storageService.setData('favoriteTownsWeather', JSON.stringify(townsWeather));
+  //
+  //   // save ids
+  //   let townsIds: number[] =
+  //     JSON.parse(this.storageService.getData('favoriteTownsIds'));
+  //   if (!townsIds) {
+  //     townsIds = [];
+  //   }
+  //   townsIds.push(townWeather.id);
+  //   this.storageService.setData('favoriteTownsIds', JSON.stringify(townsIds));
+  // }
 
-  addToFavoriteById(id: number): Promise<Weather.IWeatherObject> {
-    let townsIds: number[] =
-      JSON.parse(this.storageService.getData('favoriteTownsIds'));
-    if (!townsIds) {
-      townsIds = [];
-    }
-    townsIds.push(id);
-    this.storageService.setData('favoriteTownsIds', JSON.stringify(townsIds));
-    return this.reloadFavoriteTownsWeather();
-  }
-
-  addToFavorite(townWeather: Weather.ITownWeather): void {
-    let townsWeather: Weather.ITownWeather[] =
-      <Weather.ITownWeather[]> JSON.parse(this.storageService.getData('favoriteTownsWeather'));
-    if (!townsWeather) {
-      townsWeather = [];
-    }
-    townsWeather.push(townWeather);
-    this.storageService.setData('favoriteTownsWeather', JSON.stringify(townsWeather));
-
-    // save ids
-    let townsIds: number[] =
-      JSON.parse(this.storageService.getData('favoriteTownsIds'));
-    if (!townsIds) {
-      townsIds = [];
-    }
-    townsIds.push(townWeather.id);
-    this.storageService.setData('favoriteTownsIds', JSON.stringify(townsIds));
-  }
-
-  removeFromFavorite(townWeather: Weather.ITownWeather):void {
-    let townsWeather: Weather.ITownWeather[] =
-      <Weather.ITownWeather[]> JSON.parse(this.storageService.getData('favoriteTownsWeather'));
-    let indexToDelete: number;
-    if (townsWeather) {
-      indexToDelete = townsWeather.findIndex((element) => {
-        return element.id === townWeather.id;
-      });
-      townsWeather.splice(indexToDelete, 1);
-    } else {
-      townsWeather = [];
-    }
-    this.storageService.setData('favoriteTownsWeather', JSON.stringify(townsWeather));
-
-    // remove ids
-    let townsIds: number[] = JSON.parse(this.storageService.getData('favoriteTownsIds'));
-    let indexIdToDelete: number;
-    if (townsIds) {
-      indexIdToDelete = townsIds.findIndex((element) => {
-        return element === townWeather.id;
-      });
-      townsIds.splice(indexIdToDelete, 1);
-    } else {
-      townsIds = [];
-    }
-    this.storageService.setData('favoriteTownsIds', JSON.stringify(townsIds));
-  }
-
-  removeAllFavorites() {
-    this.storageService.setData('favoriteTownsWeather', JSON.stringify([]));
-    this.storageService.setData('favoriteTownsIds', JSON.stringify([]));
-  }
+  // removeFromFavorite(townWeather: Weather.ITownWeather):void {
+  //   let townsWeather: Weather.ITownWeather[] =
+  //     <Weather.ITownWeather[]> JSON.parse(this.storageService.getData('favoriteTownsWeather'));
+  //   let indexToDelete: number;
+  //   if (townsWeather) {
+  //     indexToDelete = townsWeather.findIndex((element) => {
+  //       return element.id === townWeather.id;
+  //     });
+  //     townsWeather.splice(indexToDelete, 1);
+  //   } else {
+  //     townsWeather = [];
+  //   }
+  //   this.storageService.setData('favoriteTownsWeather', JSON.stringify(townsWeather));
+  //
+  //   // remove ids
+  //   let townsIds: number[] = JSON.parse(this.storageService.getData('favoriteTownsIds'));
+  //   let indexIdToDelete: number;
+  //   if (townsIds) {
+  //     indexIdToDelete = townsIds.findIndex((element) => {
+  //       return element === townWeather.id;
+  //     });
+  //     townsIds.splice(indexIdToDelete, 1);
+  //   } else {
+  //     townsIds = [];
+  //   }
+  //   this.storageService.setData('favoriteTownsIds', JSON.stringify(townsIds));
+  // }
+  //
+  // removeAllFavorites() {
+  //   this.storageService.setData('favoriteTownsWeather', JSON.stringify([]));
+  //   this.storageService.setData('favoriteTownsIds', JSON.stringify([]));
+  // }
 
   getLastUpdateTime(): number {
     return parseInt(this.storageService.getData('lastUpdateTime'), 10);
@@ -163,27 +163,7 @@ export class WeatherModelService {
     return this.weatherObject.list;
   }
 
-  private initLoadInCircle(resolve: Function, reject: Function) {
-    this.loadWeatherInCircle().then((weatherObj: Weather.IWeatherObject) => {
-        this.lastUpdateTime = Date.now();
-        this.weatherObject = weatherObj;
-        this.storageService.setData('lastUpdateTime', JSON.stringify(this.lastUpdateTime));
-        this.storageService.setData('weather', JSON.stringify(this.weatherObject));
-        this.storageService.setData('params', JSON.stringify({
-          longitude: this.longitude,
-          latitude: this.latitude,
-          count: this.count})
-        );
-        // call for model update
-        this.callFunctionsInArray();
-        resolve(this.weatherObject);
-      },
-      () => {
-        reject();
-      });
-  }
-
-  private loadWeatherByIds(ids: number[]): Promise<Weather.IWeatherObject> {
+  loadWeatherByIds(ids: number[]): Promise<Weather.IWeatherObject> {
     return new Promise((resolve, reject): void => {
       let weather: Weather.IWeatherObject;
       let idsStringBody: string = '';
@@ -210,6 +190,26 @@ export class WeatherModelService {
         }
       );
     });
+  }
+
+  private initLoadInCircle(resolve: Function, reject: Function) {
+    this.loadWeatherInCircle().then((weatherObj: Weather.IWeatherObject) => {
+        this.lastUpdateTime = Date.now();
+        this.weatherObject = weatherObj;
+        this.storageService.setData('lastUpdateTime', JSON.stringify(this.lastUpdateTime));
+        this.storageService.setData('weather', JSON.stringify(this.weatherObject));
+        this.storageService.setData('params', JSON.stringify({
+          longitude: this.longitude,
+          latitude: this.latitude,
+          count: this.count})
+        );
+        // call for model update
+        this.callFunctionsInArray();
+        resolve(this.weatherObject);
+      },
+      () => {
+        reject();
+      });
   }
 
   private loadWeatherInCircle(): Promise<Weather.IWeatherObject> {

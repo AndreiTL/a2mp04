@@ -2,6 +2,7 @@ import {Component, Input, ChangeDetectorRef} from '@angular/core';
 import {template} from './weather.tpl';
 
 import {WeatherModelService} from '../common/weather_model.service';
+import {WeatherFavoriteModelService} from '../common/weather_favorite_model.service';
 
 @Component({
   selector: 'weather',
@@ -22,11 +23,12 @@ export class WeatherComponent {
 
   constructor(
       private cd: ChangeDetectorRef,
-      private weatherModelService: WeatherModelService
+      private weatherModelService: WeatherModelService,
+      private weatherFavoriteModelService: WeatherFavoriteModelService
     ) {
     console.log('WeatherComponent init.');
     this.townsTable = [];
-    this.favoriteTownsTable = this.weatherModelService.getFavoriteTownsWeather();
+    this.favoriteTownsTable = this.weatherFavoriteModelService.getFavoriteTownsWeather();
   }
 
   ngAfterContentInit() {
@@ -54,7 +56,7 @@ export class WeatherComponent {
     this.trigLoadFavorite = true;
     try {
       let id: number = parseInt(idString, 10);
-      this.weatherModelService.addToFavoriteById(id).then(
+      this.weatherFavoriteModelService.addToFavoriteById(id).then(
         (weather: Weather.IWeatherObject) => {
           this.favoriteTownsTable = weather.list;
           this.trigLoadFavorite = false;
@@ -75,27 +77,28 @@ export class WeatherComponent {
 
   addTownFavorite(town: Weather.ITownWeather) {
     console.log(" Add to favorite " + town.id);
-    this.weatherModelService.addToFavorite(town);
-    this.favoriteTownsTable = this.weatherModelService.getFavoriteTownsWeather();
+    this.weatherFavoriteModelService.addToFavorite(town);
+    this.favoriteTownsTable = this.weatherFavoriteModelService.getFavoriteTownsWeather();
   }
 
   removeTownFavorite(town: Weather.ITownWeather) {
     console.log(" Remove from favorite " + town.id);
-    this.weatherModelService.removeFromFavorite(town);
-    this.favoriteTownsTable = this.weatherModelService.getFavoriteTownsWeather();
+    this.weatherFavoriteModelService.removeFromFavorite(town);
+    this.favoriteTownsTable = this.weatherFavoriteModelService.getFavoriteTownsWeather();
   }
 
   clearFavorite() {
     this.favoriteTownsTable = [];
-    this.weatherModelService.removeAllFavorites();
+    this.weatherFavoriteModelService.removeAllFavorites();
   }
 
   reloadFavoritesTownsWeather(): void {
     this.trigLoadFavorite = true;
-    this.weatherModelService.reloadFavoriteTownsWeather().then(
+    this.weatherFavoriteModelService.reloadFavoriteTownsWeather().then(
       (weather: Weather.IWeatherObject) => {
         this.favoriteTownsTable = weather.list;
         this.trigLoadFavorite = false;
+        console.log(' Favorites towns weather was updated.');
       },
       () => {
         this.trigLoadFavorite = false;
